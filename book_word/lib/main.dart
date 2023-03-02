@@ -1,6 +1,7 @@
 import 'package:book_word/model/auth_model.dart';
 import 'package:book_word/util/storage_util.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './page/login_page.dart';
 import './page/main_page.dart';
@@ -24,9 +25,9 @@ class _MyAppState extends State<MyApp> {
   final logger = getLogger();
 
   @override
-  void initState() async {
+  void initState() {
     StorageUtil.getString("auth").then((value) {
-      final authModel = context.watch<AuthModel>();
+      final authModel = Provider.of<AuthModel>(context, listen: false);
       if (value == null) {
         logger.i("shared_preferences don't store the auth info");
         authModel.signOut();
@@ -44,7 +45,15 @@ class _MyAppState extends State<MyApp> {
 
     return CupertinoApp(
       title: 'Book Word',
-      home: isLogin ? MainPage() : const LoginPage(),
+      localizationsDelegates: const [
+        DefaultMaterialLocalizations.delegate,
+        DefaultCupertinoLocalizations.delegate,
+        DefaultWidgetsLocalizations.delegate,
+      ],
+      home: CupertinoPageScaffold(
+          child: SafeArea(
+        child: isLogin ? MainPage() : const LoginPage(),
+      )),
     );
   }
 }

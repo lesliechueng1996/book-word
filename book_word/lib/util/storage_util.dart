@@ -39,4 +39,10 @@ class StorageUtil {
     map['refreshToken'] = refreshToken;
     StorageUtil.setString("auth", convert.jsonEncode(map));
   }
+
+  static Future<void> updateCachedUserId(String userId) async {
+    Map<String, dynamic> map = await getCachedAuth();
+    map['userId'] = userId;
+    StorageUtil.setString("auth", convert.jsonEncode(map));
+  }
 }
