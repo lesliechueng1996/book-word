@@ -29,7 +29,7 @@ export default async function handler(
 
   try {
     const userId = req.headers['user-id'] as string;
-    const body: RefreshTokenReq = JSON.parse(req.body);
+    const body: RefreshTokenReq = req.body;
     const valid = validate(body);
     if (!valid) {
       console.log(validate.errors);

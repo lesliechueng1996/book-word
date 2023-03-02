@@ -26,7 +26,7 @@ export default async function handler(
   }
 
   try {
-    const body: LoginReq = JSON.parse(req.body);
+    const body: LoginReq = req.body;
     const valid = validate(body);
     if (!valid) {
       console.log(validate.errors);

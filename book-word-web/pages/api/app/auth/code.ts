@@ -29,7 +29,7 @@ export default async function handler(
 
   try {
     const userId = req.headers['user-id'] as string;
-    const body: CodeReq = JSON.parse(req.body);
+    const body: CodeReq = req.body;
     const valid = validate(body);
     if (!valid) {
       console.log(validate.errors);
@@ -46,8 +46,6 @@ export default async function handler(
       return;
     }
     if (code !== String(codeInDb)) {
-      console.log(typeof code, typeof codeInDb, userId);
-
       res.status(500).json({ message: '验证码错误' });
       return;
     }
