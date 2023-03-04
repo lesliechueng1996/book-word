@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "properties": {
+    "limit": {
+      "type": "string",
+      "enum": ["1", "5", "10", "20"]
+    },
+    "nextCursor": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": ["limit"],
+  "additionalProperties": false
+}

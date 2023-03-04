@@ -73,7 +73,6 @@ export default async function handler(
     };
     res.status(200).json(resBody);
   } catch (e: any) {
-    console.log(e);
     res.status(500).json({ message: e.message });
   }
 }
