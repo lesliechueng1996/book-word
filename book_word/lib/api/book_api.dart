@@ -1,3 +1,8 @@
+import 'dart:io';
+
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
+
 import '../model/book_model.dart';
 import '../model/response/books_res.dart';
 import '../util/http_util.dart';
@@ -22,4 +27,26 @@ Future<List<BookModel>> myBooks() async {
   List<BookModel> books =
       List.from(result['books'].map((item) => BookModel.fromJson(item)));
   return books;
+}
+
+Future<String> downloadFileAndSave(String bookId,
+    {void Function(int, int)? showDownloadProgress}) async {
+  final tempDir = await getTemporaryDirectory();
+  final path = tempDir.path;
+
+  final response = await dio.get(
+    '/api/app/books/book/$bookId',
+    onReceiveProgress: showDownloadProgress,
+    options: Options(
+        responseType: ResponseType.bytes,
+        followRedirects: false,
+        validateStatus: (status) {
+          return status! < 500;
+        }),
+  );
+  File file = File('$path/$bookId');
+  var raf = file.openSync(mode: FileMode.write);
+  raf.writeFromSync(response.data);
+  await raf.close();
+  return '$path/$bookId';
 }
