@@ -4,7 +4,7 @@ export default interface UserModel {
   nickName: string;
   state: string;
   role: string;
-  readingIds: [string] | [];
+  readingIds: string[];
   createTime: string;
   lastLoginTime?: string;
 }

@@ -41,6 +41,7 @@ export default async function handler(
 
     const { refreshToken } = body;
     const refreshTokenInDb = await redis.get(`app:refreshToken:${userId}`);
+    console.log(refreshToken, refreshTokenInDb);
     if (!refreshTokenInDb) {
       res.status(401).json({ message: '登录信息已过期' });
       return;
