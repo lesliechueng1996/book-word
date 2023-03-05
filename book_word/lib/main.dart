@@ -28,12 +28,13 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     StorageUtil.getString("auth").then((value) {
       final authModel = Provider.of<AuthModel>(context, listen: false);
+      logger.i('init auth ${authModel.isLogin}, storage: $value');
       if (value == null) {
         logger.i("shared_preferences don't store the auth info");
         authModel.signOut();
       } else {
         logger.i("shared_preferences store the auth info");
-        authModel.inid(value);
+        authModel.init(value);
       }
     });
     super.initState();
@@ -52,7 +53,8 @@ class _MyAppState extends State<MyApp> {
       ],
       home: CupertinoPageScaffold(
           child: SafeArea(
-        child: isLogin ? MainPage() : const LoginPage(),
+        child: isLogin ? MainPage() : LoginPage(),
+        // child: MainPage(),
       )),
     );
   }

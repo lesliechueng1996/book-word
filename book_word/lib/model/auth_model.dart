@@ -7,9 +7,9 @@ class AuthModel extends ChangeNotifier {
 
   bool get isLogin => _loginFlag;
 
-  void inid(String jsonStr) {
+  void init(String jsonStr) {
     Map<String, dynamic> map = convert.jsonDecode(jsonStr);
-    _loginFlag = map['loginFlag'];
+    _loginFlag = map['token'] != null;
     notifyListeners();
   }
 

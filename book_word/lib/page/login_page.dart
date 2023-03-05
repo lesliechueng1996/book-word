@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:book_word/api/auth_api.dart';
@@ -149,7 +150,9 @@ class _LoginPageState extends State<LoginPage> {
                   try {
                     await validateCode(v);
                     if (mounted) {
-                      Provider.of<AuthModel>(context, listen: false).signIn();
+                      var authModel =
+                          Provider.of<AuthModel>(context, listen: false);
+                      authModel.signIn();
                     }
                   } on HttpException catch (e) {
                     showAlert(context, '提示', e.message);
