@@ -14,7 +14,7 @@ class ReadBookPage extends StatefulWidget {
 }
 
 class _ReadBookPageState extends State<ReadBookPage> {
-  late PdfViewerController _pdfViewerController = PdfViewerController();
+  final PdfViewerController _pdfViewerController = PdfViewerController();
   OverlayEntry? _overlayEntry;
 
   void _showContextMenu(
