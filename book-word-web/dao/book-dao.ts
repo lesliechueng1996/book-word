@@ -39,16 +39,17 @@ export const getBooksByIds = async (ids: string[]) => {
   if (!ids || ids.length === 0) {
     return [];
   }
+  let index = 0;
+  let expressionValue: { [key: string]: string } = {};
+  ids.forEach((id) => {
+    const key = `:id${index}`;
+    expressionValue[key] = id;
+  });
   const result = await ddbClient.send(
-    new QueryCommand({
+    new ScanCommand({
       TableName: process.env.AWS_DYNAMODB_TABLE_BOOK,
-      KeyConditionExpression: '#id in :bookdIds',
-      ExpressionAttributeNames: {
-        '#id': 'Id',
-      },
-      ExpressionAttributeValues: {
-        ':bookdIds': ids,
-      },
+      FilterExpression: `Id IN (${Object.keys(expressionValue).toString()})`,
+      ExpressionAttributeValues: expressionValue,
     })
   );
 

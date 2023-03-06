@@ -71,7 +71,7 @@ export default async function handler(
     const resBody: RefreshTokenRes = {
       userId,
       token,
-      refreshToken,
+      refreshToken: newRefreshToken,
     };
     res.status(200).json(resBody);
   } catch (e: any) {

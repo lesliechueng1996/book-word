@@ -20,7 +20,7 @@ export default async function handler(
       return;
     }
     const bookIds = user.readingIds;
-    const books = getBooksByIds(bookIds);
+    const books = await getBooksByIds(bookIds);
 
     return res.status(200).json({
       books,
