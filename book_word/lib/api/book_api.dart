@@ -34,6 +34,7 @@ Future<String> downloadFileAndSave(String bookId,
   final tempDir = await getTemporaryDirectory();
   final path = tempDir.path;
 
+  final temp = await prepareToken(true);
   final response = await dio.get(
     '/api/app/books/book/$bookId',
     onReceiveProgress: showDownloadProgress,
@@ -42,6 +43,10 @@ Future<String> downloadFileAndSave(String bookId,
         followRedirects: false,
         validateStatus: (status) {
           return status! < 500;
+        },
+        headers: {
+          'Authorization': 'Bearer ${temp[0] ?? ""}',
+          'User-Id': temp[1] ?? ''
         }),
   );
   File file = File('$path/$bookId');

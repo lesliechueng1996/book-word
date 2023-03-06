@@ -29,21 +29,26 @@ Future<List> prepareToken(bool checkToken) async {
   if (checkToken && willTokenExpired(token)) {
     // refresh token
     log.i("begin to refresh token");
-    final refreshDio = Dio(BaseOptions(baseUrl: ctx));
-    final response = await refreshDio.post('/api/app/auth/refresh-token',
-        data: {'refreshToken': auth['refreshToken']},
-        options: Options(headers: {'User-Id': auth['userId'] ?? ''}));
+    try {
+      final refreshDio = Dio(BaseOptions(baseUrl: ctx));
+      final response = await refreshDio.post('/api/app/auth/refresh-token',
+          data: {'refreshToken': auth['refreshToken']},
+          options: Options(headers: {'User-Id': auth['userId'] ?? ''}));
 
-    log.i("refresh token http status: ${response.statusCode}");
-    if (response.statusCode == HttpStatus.ok) {
-      var jsonResponse = response.data;
-      String token = jsonResponse['token'];
-      String refreshToken = jsonResponse['refreshToken'];
-      StorageUtil.updateCachedToken(token: token, refreshToken: refreshToken);
-      log.i("refresh token success");
-      return [token, auth['userId']];
-    } else {
-      log.w("refresh token error", response.data);
+      log.i("refresh token http status: ${response.statusCode}");
+      if (response.statusCode == HttpStatus.ok) {
+        var jsonResponse = response.data;
+        String token = jsonResponse['token'];
+        String refreshToken = jsonResponse['refreshToken'];
+        StorageUtil.updateCachedToken(token: token, refreshToken: refreshToken);
+        log.i("refresh token success");
+        return [token, auth['userId']];
+      } else {
+        log.w("refresh token error", response.data);
+        throw ReloginException();
+      }
+    } catch (e) {
+      log.e("refresh token error", e);
       throw ReloginException();
     }
   } else {
