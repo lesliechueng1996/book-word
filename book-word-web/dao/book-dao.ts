@@ -1,10 +1,6 @@
 import BookModel from '@/model/book-model';
 import { ddbClient } from '@/utils/dynamodb';
-import {
-  QueryCommand,
-  ScanCommand,
-  ScanCommandInput,
-} from '@aws-sdk/lib-dynamodb';
+import { ScanCommand, ScanCommandInput } from '@aws-sdk/lib-dynamodb';
 
 export const listBooks = async (limit: number, nextCursor?: string) => {
   const scanCommandParam: ScanCommandInput = {
