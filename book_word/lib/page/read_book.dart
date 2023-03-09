@@ -1,5 +1,8 @@
 import 'dart:io';
 
+import 'package:book_word/api/word_api.dart';
+import 'package:book_word/component/translation_list.dart';
+import 'package:book_word/model/word_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
@@ -17,6 +20,20 @@ class _ReadBookPageState extends State<ReadBookPage> {
   final PdfViewerController _pdfViewerController = PdfViewerController();
   OverlayEntry? _overlayEntry;
 
+  List<String> translationList = [];
+  String selectedWord = "";
+  List<WordModel> wordList = [];
+
+  @override
+  void initState() {
+    myWordInThisBook(widget.bookId).then((value) {
+      setState(() {
+        wordList = value;
+      });
+    });
+    super.initState();
+  }
+
   void _showContextMenu(
       BuildContext context, PdfTextSelectionChangedDetails details) {
     final OverlayState overlayState = Overlay.of(context);
@@ -25,8 +42,13 @@ class _ReadBookPageState extends State<ReadBookPage> {
         top: details.globalSelectedRegion!.center.dy - 85,
         left: details.globalSelectedRegion!.bottomLeft.dx,
         child: CupertinoButton(
-            onPressed: () {
-              print(details.selectedText);
+            onPressed: () async {
+              final dstList = await translate(details.selectedText);
+              setState(() {
+                translationList = dstList;
+                selectedWord = details.selectedText ?? "";
+              });
+
               _pdfViewerController.clearSelection();
             },
             color: CupertinoColors.label,
@@ -73,7 +95,12 @@ class _ReadBookPageState extends State<ReadBookPage> {
               flex: 1,
               child: Column(
                 children: [
-                  Expanded(child: Container()),
+                  Expanded(
+                      child: TranslationList(
+                          dstList: translationList,
+                          bookId: widget.bookId,
+                          word: selectedWord,
+                          addNewWordCallback: (wordModel) {})),
                   Expanded(child: ListView()),
                 ],
               ),

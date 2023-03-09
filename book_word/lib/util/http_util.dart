@@ -112,3 +112,25 @@ Future<Map<String, dynamic>> post({
   }
   return response.data;
 }
+
+Future<Map<String, dynamic>> delete({
+  required String uri,
+  Map<String, dynamic>? queryParameters,
+  Object? body,
+  bool checkToken = true,
+}) async {
+  final temp = await prepareToken(checkToken);
+
+  final response = await dio.delete(uri,
+      data: body,
+      queryParameters: queryParameters,
+      options: Options(headers: {
+        'Authorization': 'Bearer ${temp[0] ?? ""}',
+        'User-Id': temp[1] ?? ''
+      }));
+  if (response.statusCode != HttpStatus.ok) {
+    log.e({'uri': uri, 'status': response.statusCode, 'body': response.data});
+    throw HttpException(response.data['message']);
+  }
+  return response.data;
+}
